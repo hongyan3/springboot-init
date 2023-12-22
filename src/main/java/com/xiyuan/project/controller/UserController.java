@@ -1,5 +1,6 @@
 package com.xiyuan.project.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiyuan.project.annotation.AuthCheck;
 import com.xiyuan.project.common.BaseResponse;
@@ -198,8 +199,13 @@ public class UserController {
     @PostMapping("/list/page")
     @AuthCheck(AccessRole = UserRoleEnum.ADMIN)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
+        if (userQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 50, ErrorCode.PARAMS_ERROR);
         Page<User> userPage = userService.page(new Page<>(current, size),
                 userService.getQueryWrapper(userQueryRequest));
         return ResultUtils.success(userPage);
