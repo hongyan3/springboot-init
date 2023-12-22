@@ -20,6 +20,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         try {
             tempFile = new File(savePath);
             File parentDir = tempFile.getParentFile();
+//            如果父文件夹不存在，则创建
             if (!parentDir.exists()) {
                 parentDir.mkdirs();
             }

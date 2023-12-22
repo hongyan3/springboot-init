@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -80,13 +79,15 @@ public class FileController {
         if (fileSuffix != null) {
             fileSuffix = Strings.toRootLowerCase(fileSuffix);
         }
-        if (FileUploadBusinessEnum.USER_AVATAR.equals(fileUploadEnum)) {
-            if (fileSize > 1024 * 1024L) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过 1M");
-            }
-            if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(fileSuffix)) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");
-            }
+        switch(fileUploadEnum) {
+            case USER_AVATAR:
+                if (fileSize > 1024 * 1024L) {
+                    throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过 1M");
+                }
+                if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(fileSuffix)) {
+                    throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");
+                }
+                break;
         }
     }
 }
