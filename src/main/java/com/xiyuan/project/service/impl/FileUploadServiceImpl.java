@@ -22,7 +22,9 @@ public class FileUploadServiceImpl implements FileUploadService {
             File parentDir = tempFile.getParentFile();
 //            如果父文件夹不存在，则创建
             if (!parentDir.exists()) {
-                parentDir.mkdirs();
+                if (!parentDir.mkdirs()) {
+                    throw new BusinessException(ErrorCode.SYSTEM_ERROR,"文件夹创建失败");
+                }
             }
             Files.copy(Paths.get(file.toURI()),Paths.get(tempFile.toURI()));
         } catch (Exception e) {
