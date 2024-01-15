@@ -6,7 +6,6 @@ import com.xiyuan.project.common.ErrorCode;
 import com.xiyuan.project.common.ResultUtils;
 import com.xiyuan.project.constant.FileConstant;
 import com.xiyuan.project.exception.BusinessException;
-import com.xiyuan.project.model.dto.file.FileUploadRequest;
 import com.xiyuan.project.model.entity.User;
 import com.xiyuan.project.model.enums.FileUploadBusinessEnum;
 import com.xiyuan.project.service.FileUploadService;
@@ -34,8 +33,7 @@ public class FileController {
     @Resource
     FileUploadService fileUploadService;
     @PostMapping("/upload")
-    public BaseResponse<String> UploadFile(@RequestPart("file") MultipartFile multipartFile, FileUploadRequest uploadRequest, HttpServletRequest request) {
-        String business = uploadRequest.getBusiness();
+    public BaseResponse<String> UploadFile(@RequestPart("file") MultipartFile multipartFile, @RequestPart("business") String business, HttpServletRequest request) {
         FileUploadBusinessEnum fileUploadEnum = FileUploadBusinessEnum.getEnumByValue(business);
         if (fileUploadEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
