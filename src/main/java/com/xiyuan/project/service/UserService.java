@@ -3,6 +3,7 @@ package com.xiyuan.project.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiyuan.project.model.dto.user.UserQueryRequest;
+import com.xiyuan.project.model.dto.user.UserRegisterRequest;
 import com.xiyuan.project.model.entity.User;
 import com.xiyuan.project.model.vo.UserVO;
 
@@ -18,12 +19,9 @@ public interface UserService extends IService<User> {
     /**
      * 用户注册
      *
-     * @param userAccount   用户账户
-     * @param userPassword  用户密码
-     * @param checkPassword 校验密码
      * @return 新用户 id
      */
-    long userRegister(String userAccount,String userName, String userPassword, String checkPassword);
+    long userRegister(UserRegisterRequest registerRequest);
     /**
      * 用户登录
      *

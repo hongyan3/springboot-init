@@ -9,6 +9,7 @@ import com.xiyuan.project.constant.UserConstant;
 import com.xiyuan.project.exception.BusinessException;
 import com.xiyuan.project.mapper.UserMapper;
 import com.xiyuan.project.model.dto.user.UserQueryRequest;
+import com.xiyuan.project.model.dto.user.UserRegisterRequest;
 import com.xiyuan.project.model.entity.User;
 import com.xiyuan.project.model.enums.UserRoleEnum;
 import com.xiyuan.project.model.vo.UserVO;
@@ -26,21 +27,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
-* @author xiyuan
-* @description 针对表【user】的数据库操作Service实现
-* @createDate 2023-12-21 22:24:11
-*/
+ * @author xiyuan
+ * @description 针对表【user】的数据库操作Service实现
+ * @createDate 2023-12-21 22:24:11
+ */
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
-    implements UserService {
+        implements UserService {
 
     /**
      * 盐值，混淆密码
      */
     private static final String SALT = "xiyuan";
+
     @Override
-    public long userRegister(String userAccount, String userName,String userPassword, String checkPassword) {
+    public long userRegister(UserRegisterRequest registerRequest) {
+
+        String userAccount = registerRequest.getUserAccount();
+        String userName = registerRequest.getUserName();
+        String userPassword = registerRequest.getUserPassword();
+        String checkPassword = registerRequest.getCheckPassword();
+
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userName, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -138,7 +146,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public boolean isAdmin(User user) {
-        return user != null && UserRoleEnum.ADMIN.getValue()==user.getRole();
+        return user != null && UserRoleEnum.ADMIN.getValue() == user.getRole();
     }
 
     @Override
@@ -181,7 +189,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String sortOrder = userQueryRequest.getSortOrder();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(id != null, "id", id);
-        queryWrapper.eq(userRole != null,"role", userRole);
+        queryWrapper.eq(userRole != null, "role", userRole);
         queryWrapper.like(StringUtils.isNotBlank(userName), "user_name", userName);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
